@@ -1,0 +1,10 @@
+{
+  "name": "Orbio Desk",
+  "short_name": "Orbio Desk",
+  "description": "Premium dispatch for premium fleets.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#154a9a",
+  "icons": [{"src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml"}]
+}
