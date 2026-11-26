@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# After your site is live, add your sitemap address below, for example:
-# Sitemap: https://YOUR-DOMAIN/sitemap.xml
+Sitemap: https://abdullahrehan849.github.io/orbio-desk/sitemap.xml
