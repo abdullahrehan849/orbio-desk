@@ -1,10 +1,10 @@
 {
-  "name": "Orbio Desk",
-  "short_name": "Orbio Desk",
-  "description": "Premium dispatch for premium fleets.",
+  "name": "ORBIO ASSIST",
+  "short_name": "ORBIO ASSIST",
+  "description": "Virtual assistant and business support for UK businesses.",
   "start_url": "./",
   "display": "browser",
   "background_color": "#ffffff",
-  "theme_color": "#154a9a",
-  "icons": [{"src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml"}]
+  "theme_color": "#1459a8",
+  "icons": [{"src": "favicon.svg", "sizes": "any", "type": "image/svg+xml"}]
 }
