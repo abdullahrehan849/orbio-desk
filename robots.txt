@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://abdullahrehan849.github.io/orbio-desk/sitemap.xml

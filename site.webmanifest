@@ -2,7 +2,7 @@
   "name": "Orbio Desk",
   "short_name": "Orbio Desk",
   "description": "Premium dispatch for premium fleets.",
-  "start_url": "/",
+  "start_url": "./",
   "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#154a9a",
