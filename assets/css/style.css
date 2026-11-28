@@ -121,3 +121,50 @@ body.lgo{overflow:hidden}
 .btn.listen{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:14px 30px;border-radius:99px;background:var(--blue);color:#fff;box-shadow:0 8px 20px rgba(21,74,154,.25);transition:transform .15s,background .15s}
 .btn.listen:hover{background:var(--blue-d);transform:translateY(-2px)}.btn.listen .pl{width:30px;height:30px;border-radius:50%;background:#fff;color:var(--blue);display:inline-flex;align-items:center;justify-content:center;padding-left:2px}
 @media(min-width:861px){.teaser h2{font-size:1.8rem}}
+
+.mon-s{border-bottom:1px solid var(--line)}
+.mgrid{display:grid;gap:22px;grid-template-columns:1fr;grid-template-areas:"h" "p" "c";max-width:1000px;margin:0 auto}
+.mh{grid-area:h;text-align:center}.mh h2:after{margin-left:auto;margin-right:auto}.mh .lead{margin-left:auto;margin-right:auto}
+.mgrid .mon{grid-area:p;margin:0 auto;position:relative}.mc{grid-area:c;display:grid;gap:14px}
+.mc .card{padding:16px 18px}.mc h3{font-size:.98rem;margin-bottom:4px}
+.lv{position:absolute;top:14px;left:14px;background:#d62839;color:#fff;font-weight:800;font-size:.8rem;letter-spacing:.04em;padding:5px 12px 5px 10px;border-radius:6px;display:flex;align-items:center;gap:7px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.lv i{width:8px;height:8px;border-radius:50%;background:#fff;animation:b 1.4s infinite}
+@media(min-width:861px){.mgrid{grid-template-columns:1.1fr .9fr;grid-template-areas:"h p" "c p";gap:20px 48px;align-items:start}.mh{text-align:left}.mh h2:after{margin-left:0}.mh .lead{margin-left:0}.mgrid .mon{margin:0}}
+.bcb{margin-top:26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px;background:var(--navy);color:#dcebf5;border-radius:var(--r);padding:22px 24px}.bcb h3{color:#fff;margin:0 0 4px}.bcb p{margin:0;font-size:.95rem}.bcb .btn{background:var(--sky);border-color:var(--sky);color:#06223d;white-space:nowrap}.bcb .btn:hover{background:#6cc0f0;border-color:#6cc0f0}
+.bcm{position:fixed;inset:0;background:rgba(5,5,5,.78);z-index:95;display:flex;align-items:center;justify-content:center;padding:12px}.bcm[hidden]{display:none}
+.bcp{width:100%;max-width:460px;height:min(88vh,780px);display:flex;flex-direction:column}
+.bct{display:flex;justify-content:space-between;align-items:center;padding:0 4px 10px}.bct a{color:#f3e2b3;font-size:.9rem;font-weight:600}
+.bcx{width:36px;height:36px;border-radius:50%;border:1px solid #c9a24a;background:rgba(0,0,0,.4);color:#f3e2b3;font-size:1.4rem;line-height:1;cursor:pointer}
+.bcp iframe{flex:1;width:100%;border:0;border-radius:18px;background:#0a0a0b}
+body.bco{overflow:hidden}
+
+.bcpromo{margin:30px auto 0;max-width:460px;text-align:center;background:linear-gradient(160deg,#fff7d9,#fbe8a8);border:1.5px solid #ecd07a;border-radius:16px;padding:22px 20px 26px;box-shadow:0 10px 26px rgba(150,110,20,.16)}
+.bci{height:132px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.bci svg{width:132px;height:auto;filter:drop-shadow(0 12px 7px rgba(0,0,0,.3));animation:bctilt 6s ease-in-out infinite alternate}
+@keyframes bctilt{from{transform:rotate(-50deg)}to{transform:rotate(-22deg)}}
+.bck{font-size:.8rem;font-weight:800;letter-spacing:.16em;color:#9a6f08;margin:0}
+.bcpromo h3{font-size:1.3rem;color:var(--navy);margin:2px 0 6px}.bcpromo p:not(.bck){margin:0 0 16px;color:#33415c}
+.bcpromo .btn{background:#f2c94c;border:0;color:#1a1405;border-radius:99px;padding:11px 32px;font-weight:800;letter-spacing:.02em;box-shadow:0 3px 0 rgba(150,110,20,.3)}.bcpromo .btn:hover{background:#f6d467}
+
+/* hero photo background (image placement only) */
+section.hero{background:linear-gradient(0deg,#fff 0,#fff 30%,rgba(255,255,255,0) 60%),linear-gradient(90deg,rgba(255,255,255,.96) 0,rgba(255,255,255,.9) 42%,rgba(255,255,255,.26) 100%),url(../img/hero-mobile.jpg) right top/auto 62% no-repeat,#fff}
+@media(min-width:861px){section.hero{padding:64px 0 72px;background:linear-gradient(0deg,#fff 0,rgba(255,255,255,0) 14%),linear-gradient(90deg,rgba(255,255,255,.97) 0,rgba(255,255,255,.95) 40%,rgba(255,255,255,.6) 55%,rgba(255,255,255,0) 78%),url(../img/hero-desktop.jpg) right center/cover no-repeat,#fff}.hero h1{max-width:11.5em}}
+/* Our Operations */
+.ops{border-top:1px solid var(--line)}
+.opsg{display:grid;gap:22px;grid-template-columns:1fr;grid-template-areas:"t" "f" "h"}
+.opst{grid-area:t}.opst .eyebrow{margin-bottom:14px}.opst h2:after{display:none}.opst h2{font-size:1.9rem}.hl{color:var(--sky)}.opst .lead{margin-bottom:0}
+.opsf{grid-area:f;margin:0;background:var(--mist);border:1px solid var(--line);border-radius:20px;padding:8px}
+.opsf img{display:block;width:100%;height:auto;border-radius:14px}
+.opsh{grid-area:h;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ot{display:flex;align-items:center;gap:12px;background:#f1f7fd;border:1px solid var(--line);border-radius:14px;padding:14px}
+.ot svg{flex:none}.ot span{font-weight:700;color:var(--navy);line-height:1.25;font-size:.98rem}
+@media(max-width:380px){.ot{flex-direction:column;align-items:flex-start}}
+@media(min-width:861px){.opsg{grid-template-columns:1fr 1.05fr;grid-template-areas:"t f" "h f";gap:28px 56px;align-items:center}.opst h2{font-size:2.5rem}.opsh{align-self:start}}
+
+/* Hero: photo on the right (computer area), smaller two-colour heading on the left */
+.hero h1{font-size:1.75rem;color:#0a1d42;text-shadow:0 0 14px rgba(255,255,255,.95),0 0 4px rgba(255,255,255,.9)}
+.hero h1 .h1b{color:#1556c8}
+section.hero{background:linear-gradient(0deg,#fff 0,#fff 33%,rgba(255,255,255,0) 58%),linear-gradient(90deg,#fff 0,rgba(255,255,255,.95) 22%,rgba(255,255,255,.6) 40%,rgba(255,255,255,0) 66%),url(../img/hero-mobile.jpg) 62px 0/auto 66% no-repeat,#fff}
+.hero .lead,.hero .tr{text-shadow:0 0 8px #fff,0 0 14px rgba(255,255,255,.95)}
+@media(max-width:860px){.hero h1{max-width:82%}.hero .lead{max-width:76%;font-size:1rem}.hero .tr{max-width:92%;gap:6px 16px;font-size:.92rem}.hero .cta .btn{padding:13px 22px;font-size:.95rem}}
+@media(min-width:861px){.hero h1{font-size:2.8rem;max-width:11.5em}section.hero{background:linear-gradient(0deg,#fff 0,rgba(255,255,255,0) 14%),linear-gradient(90deg,#fff 0,rgba(255,255,255,.95) 38%,rgba(255,255,255,.55) 52%,rgba(255,255,255,0) 74%),url(../img/hero-desktop.jpg) right center/cover no-repeat,#fff}}
