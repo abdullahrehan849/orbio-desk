@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ORBIO LTD — Interactive 3D Business Card</title>
+<style>
+:root{--gold:#d8b878;--gold2:#f3e3b5;--gold3:#9a7b3f;--ink:#0b0b0c;--panel:#111114;--txt:#e9e4d8;--mut:#a39e92;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:radial-gradient(ellipse at 50% 35%,#1d1a14 0%,#0a0a0b 60%,#050505 100%);color:var(--txt);font-family:Georgia,'Times New Roman',serif;overflow:hidden}
+canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+.wrap{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:12px}
+.brandtop{font:600 11px/1 system-ui,sans-serif;letter-spacing:.4em;color:var(--gold3);text-transform:uppercase}
+.scene{perspective:1100px;width:min(88vw,520px);aspect-ratio:7/4;touch-action:none;cursor:grab}
+.stage{width:100%;height:100%;transform-style:preserve-3d;animation:enter 1.8s cubic-bezier(.2,.8,.2,1) both,float 6s ease-in-out 1.8s infinite}
+@keyframes enter{from{opacity:0;transform:translateY(60px) scale(.5) rotateY(-140deg)}to{opacity:1;transform:none}}
+@keyframes float{50%{transform:translateY(-10px)}}
+.card{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,1.2,.4,1)}
+.card.drag{transition:none}
+.face{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform-style:preserve-3d;overflow:visible;
+background:linear-gradient(145deg,#1b1b1e,#08080a 55%,#151517);border:1.5px solid var(--gold);box-shadow:0 0 0 4px #0a0a0b,0 0 0 5px rgba(216,184,120,.35),0 30px 60px rgba(0,0,0,.7),inset 0 0 40px rgba(0,0,0,.6)}
+.face::before{content:"";position:absolute;inset:9px;border:1px solid rgba(216,184,120,.35);border-radius:10px;pointer-events:none}
+.face::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;background:linear-gradient(115deg,transparent calc(var(--g,50%) - 18%),rgba(255,240,200,.22) var(--g,50%),transparent calc(var(--g,50%) + 18%))}
+.back{transform:rotateY(180deg);background:repeating-radial-gradient(circle at 90% 12%,transparent 0 10px,rgba(216,184,120,.07) 10px 11px),linear-gradient(145deg,#1b1b1e,#08080a 55%,#151517)}
+.gt{background:linear-gradient(100deg,var(--gold3),var(--gold2) 45%,#fff 52%,var(--gold) 70%,var(--gold3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.front{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px}
+.logo{width:clamp(44px,12vw,70px);transform:translateZ(30px);filter:drop-shadow(0 0 10px rgba(216,184,120,.5));animation:glow 4s ease-in-out infinite}
+@keyframes glow{50%{filter:drop-shadow(0 0 20px rgba(243,227,181,.9))}}
+.name{font-size:clamp(22px,6.4vw,38px);letter-spacing:.22em;margin:6px 0 2px;transform:translateZ(36px);font-weight:700}
+.sub{font:500 clamp(8px,2.2vw,11px)/1 system-ui,sans-serif;letter-spacing:.36em;text-transform:uppercase;color:#cfcfd4;transform:translateZ(24px)}
+.tag{font-style:italic;font-size:clamp(11px,3vw,15px);margin-top:10px;color:var(--gold);transform:translateZ(20px)}
+.welcome{font:clamp(8px,2.1vw,10.5px)/1.5 system-ui,sans-serif;color:var(--mut);max-width:80%;margin-top:6px;transform:translateZ(14px)}
+.hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font:600 9px system-ui,sans-serif;letter-spacing:.3em;color:var(--gold3);text-transform:uppercase;animation:pulse 2.4s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.back{padding:clamp(12px,3.6vw,22px);display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,1.3vw,8px)}
+.bk-h{font-size:clamp(11px,3vw,15px);letter-spacing:.3em;font-weight:700;margin:0 0 2px;transform:translateZ(20px)}
+.ct{display:flex;align-items:center;gap:8px;color:var(--txt);text-decoration:none;font:clamp(9.5px,2.6vw,13px)/1.2 system-ui,sans-serif;padding:3px 6px;border-radius:8px;border:1px solid transparent;transition:.25s;opacity:0;animation:emerge .8s ease forwards;animation-delay:calc(var(--i)*.12s + 1.2s);transform:translateZ(var(--z,26px))}
+@keyframes emerge{from{opacity:0;transform:translateZ(0) translateX(-14px)}to{opacity:1;transform:translateZ(var(--z,26px))}}
+.ct:hover,.ct:focus-visible{border-color:var(--gold);background:rgba(216,184,120,.1);color:var(--gold2);outline:none}
+.ct i{font-style:normal;color:var(--gold);width:1.3em;text-align:center}
+.wa{--z:46px;background:linear-gradient(135deg,#1fa855,#128c4a);color:#fff;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:0 0 0 0 rgba(37,211,102,.6);animation:emerge .8s ease forwards,ring 2.2s infinite;animation-delay:1.2s,2.2s;justify-content:center;letter-spacing:.04em}
+.wa:hover{background:linear-gradient(135deg,#25d366,#16a34a);color:#fff;border-color:#bff5d3}
+@keyframes ring{70%{box-shadow:0 0 0 12px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.veins{position:absolute;inset:0;width:100%;height:100%;border-radius:16px;overflow:hidden;pointer-events:none}.veins path{fill:none;stroke-linecap:round}.veins .b{stroke-width:1;opacity:.32}.veins .e{stroke-width:1.8;stroke-dasharray:46 354;filter:drop-shadow(0 0 4px #ff9a3c);animation:lava 8s linear infinite;animation-delay:calc(var(--d)*-1s)}@keyframes lava{to{stroke-dashoffset:-400}}a.name{display:block;text-decoration:none;cursor:pointer;transition:.3s}a.name:hover{filter:drop-shadow(0 0 14px rgba(243,227,181,.8))}
+.ctrl,.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:620px}
+.wrap{display:flex;flex-direction:row;align-items:stretch;justify-content:flex-start;overflow-y:auto;gap:0}
+.col{margin:auto;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+.scene{transition:width .9s cubic-bezier(.3,1,.3,1)}
+body.open .scene{width:min(72vw,400px)}
+.hud{max-height:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:620px;transition:max-height 1.2s ease}
+body.open .hud{max-height:1000px;overflow:visible}
+.it{opacity:0;transform:translateY(34px) scale(.96);filter:blur(4px)}
+body.open .it{animation:fin .8s cubic-bezier(.2,.9,.2,1) forwards;animation-delay:calc(var(--k)*.12s + .35s)}
+@keyframes fin{to{opacity:1;transform:none;filter:none}}
+.wl{margin:0;text-align:center;font:12.5px/1.55 system-ui,sans-serif;color:var(--mut);max-width:440px}
+.wl b{display:block;font:italic 16px Georgia,serif;margin-bottom:4px}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.cc{text-transform:none;letter-spacing:.04em;font-size:12px;text-align:center}
+.wa2{background:linear-gradient(135deg,#1fa855,#128c4a);color:#fff;border-color:#7be0a5;font-size:12.5px;padding:13px 22px;letter-spacing:.05em;text-transform:none}
+body.open .wa2{animation:fin .8s cubic-bezier(.2,.9,.2,1) forwards,ring 2.2s infinite;animation-delay:1.1s,2.4s}
+.gl{width:1px;height:20px;background:linear-gradient(var(--gold),transparent)}
+.tap{font:600 10px system-ui,sans-serif;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);animation:pulse 2.4s infinite;cursor:pointer;padding:10px}
+body.open .tap,body.intro .ctrl{display:none}
+body.intro a.name{pointer-events:none}.btn.wa2{background:linear-gradient(135deg,#1fa855,#128c4a);color:#fff;border-color:#7be0a5;font-size:12.5px;padding:13px 22px;letter-spacing:.05em;text-transform:none}.btn.wa2:hover{background:linear-gradient(135deg,#25d366,#16a34a)}.btn.cc{text-transform:none;letter-spacing:.04em;font-size:12px;text-align:center}.back{align-items:center}
+
+:root{--u:3.4px}
+body.open .scene{margin:-26px 0}
+.it{transform:translateY(calc((14 - var(--k))*16px + 30px)) scale(.7)}
+.ctrl.it{transform:translateY(-50px) scale(.7)}
+.rays{position:absolute;left:50%;top:50%;width:0;height:0;z-index:3;pointer-events:none}
+.rays i{position:absolute;left:-1.5px;bottom:0;width:3px;height:min(62vh,420px);transform-origin:50% 100%;transform:rotate(calc(var(--a)*1deg)) scaleY(0);background:linear-gradient(to top,rgba(255,226,150,.95),rgba(216,184,120,.35) 55%,transparent);filter:drop-shadow(0 0 6px #e8cf92);opacity:0;mix-blend-mode:screen}
+.rays::before{content:"";position:absolute;left:-60px;top:-60px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,226,150,.8),transparent 65%);opacity:0}
+body.open .rays i{animation:beam 3.2s ease-out forwards;animation-delay:calc(var(--n)*.04s)}
+body.open .rays::before{animation:glw 3.2s ease-out forwards}
+@keyframes beam{0%{opacity:0;transform:rotate(calc(var(--a)*1deg)) scaleY(0)}14%{opacity:1;transform:rotate(calc(var(--a)*1deg)) scaleY(1)}70%{opacity:.6}100%{opacity:0;transform:rotate(calc(var(--a)*1deg)) scaleY(1.04)}}
+@keyframes glw{20%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(2)}}
+.back{padding:calc(var(--u)*5) calc(var(--u)*6);gap:calc(var(--u)*1.2)}
+.back .bk-h{font-size:calc(var(--u)*3.2);margin:0 0 calc(var(--u)*.4)}
+.back .ct{--z:14px;font-size:calc(var(--u)*2.7);line-height:1.15;padding:calc(var(--u)*.8) calc(var(--u)*1.6);gap:calc(var(--u)*2);white-space:nowrap}
+.back .wa{--z:24px;font-size:calc(var(--u)*3.1);padding:calc(var(--u)*1.7) calc(var(--u)*2.4)}
+
+
+button,.btn{font:600 10.5px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2);background:linear-gradient(#17171a,#0d0d0f);border:1px solid rgba(216,184,120,.55);padding:10px 14px;border-radius:999px;cursor:pointer;text-decoration:none;transition:.25s;position:relative;overflow:hidden}
+button:hover,.btn:hover,button:focus-visible,.btn:focus-visible{border-color:var(--gold2);color:#fff;box-shadow:0 0 18px rgba(216,184,120,.35);transform:translateY(-2px);outline:none}
+.nav button.prime,.btn.prime{background:linear-gradient(135deg,var(--gold3),var(--gold) 50%,var(--gold2));color:#1a1408;border-color:var(--gold2)}
+.snd{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:12px;padding:7px 10px;font-size:9px}
+.ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(3,3,4,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:10}
+.ov.on{display:flex;animation:fade .4s}
+@keyframes fade{from{opacity:0}}
+.pn{position:relative;width:min(94vw,560px);max-height:86vh;overflow:auto;background:linear-gradient(160deg,#17171b,#0b0b0d);border:1px solid var(--gold);border-radius:18px;padding:26px 22px 22px;box-shadow:0 0 60px rgba(216,184,120,.18);animation:rise .6s cubic-bezier(.2,.9,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(40px) scale(.94) rotateX(12deg)}}
+.pn h2{margin:0 0 4px;font-size:22px;letter-spacing:.14em;text-transform:uppercase}
+.pn .k{font:600 9px system-ui,sans-serif;letter-spacing:.35em;color:var(--gold3);text-transform:uppercase;margin-bottom:12px}
+.pn p,.pn li{font:14px/1.65 system-ui,sans-serif;color:#cfcac0}
+.x{position:absolute;top:10px;right:10px;width:34px;height:34px;padding:0;border-radius:50%;font-size:15px;letter-spacing:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.tile{border:1px solid rgba(216,184,120,.35);border-radius:12px;padding:12px;background:rgba(216,184,120,.04);transition:.3s;animation:rise .6s both;animation-delay:calc(var(--i)*.09s)}
+.tile:hover{border-color:var(--gold);transform:translateY(-3px);background:rgba(216,184,120,.1)}
+.tile b{display:block;color:var(--gold2);font:600 13px system-ui,sans-serif;margin-bottom:4px}
+.tile span{font:12px/1.5 system-ui,sans-serif;color:var(--mut)}
+.note{font:italic 11.5px/1.5 system-ui,sans-serif;color:var(--mut);margin-top:10px}
+.steps{position:relative;margin:14px 0 4px;padding-left:54px}
+.steps::before{content:"";position:absolute;left:19px;top:10px;bottom:10px;width:2px;background:linear-gradient(var(--gold),transparent);transform-origin:top;animation:grow 1.6s ease both}
+@keyframes grow{from{transform:scaleY(0)}}
+.st{position:relative;margin-bottom:18px;animation:rise .7s both;animation-delay:calc(var(--i)*.35s)}
+.st em{position:absolute;left:-54px;top:-2px;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;font:700 16px Georgia,serif;color:var(--gold2);background:#0b0b0d;font-style:normal;box-shadow:0 0 16px rgba(216,184,120,.35)}
+.st b{display:block;font:600 14px system-ui,sans-serif;color:var(--gold2)}
+.cl{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.cl .btn{text-align:left;letter-spacing:.06em;text-transform:none;font-size:13px;padding:12px 16px;border-radius:12px}
+.cl .btn small{display:block;color:var(--mut);font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:2px}
+.cl .wab{background:linear-gradient(135deg,#1fa855,#128c4a);color:#fff;border-color:#7be0a5}
+.cl .wab small{color:#d8ffe6}
+.ed{outline:1px dashed var(--gold3);border-radius:4px;padding:0 3px}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.nav button{padding:9px 11px;font-size:9.5px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important}}
+</style></head><body class="intro">
+<canvas id="fx"></canvas>
+<div class="wrap"><div class="col">
+
+<div class="hud" id="hud">
+<p class="wl it" style="--k:0"><b class="gt">Reliable Services. Trusted Partnerships.</b>A UK-registered B2B IT and Business Services provider, delivering tailored solutions to businesses.</p>
+<div class="nav"><button class="it" style="--k:1" data-p="about">About</button><button class="it" style="--k:2" data-p="services">Services</button><button class="it" style="--k:3" data-p="why">Why Choose Us</button><button class="it" style="--k:4" data-p="how">How It Works</button><button class="it" style="--k:5" data-p="contact">Contact</button></div>
+<a class="btn wa2 it" style="--k:6" href="https://wa.me/447843862112" target="_blank" rel="noopener">💬 WhatsApp · +44 7843 862112</a>
+<div class="row"><a class="btn cc it" style="--k:7" href="tel:+442080580504">☎ 020 8058 0504</a><a class="btn cc it" style="--k:8" href="mailto:info@orbioltd.co.uk?subject=Enquiry%20-%20ORBIO%20LTD">✉ info@orbioltd.co.uk</a><a class="btn cc it" style="--k:9" href="mailto:support@orbioltd.co.uk?subject=Support%20Request%20-%20ORBIO%20LTD">✉ support@orbioltd.co.uk</a></div>
+<div class="btn cc it" style="--k:10;pointer-events:none">⌖ 2 Frederick Street, Kings Cross, London WC1X 0ND</div>
+<a class="btn prime it" style="--k:11" href="https://www.orbioltd.co.uk/" target="_blank" rel="noopener">Visit Our Website</a>
+<div class="gl it" style="--k:12"></div>
+</div>
+<div class="scene" id="scene"><div class="rays" aria-hidden="true"><i style="--a:-62;--n:0"></i><i style="--a:-46;--n:1"></i><i style="--a:-31;--n:2"></i><i style="--a:-15;--n:3"></i><i style="--a:0;--n:4"></i><i style="--a:15;--n:5"></i><i style="--a:31;--n:6"></i><i style="--a:46;--n:7"></i><i style="--a:62;--n:8"></i></div><div class="stage"><div class="card" id="card">
+<div class="face front">
+<svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9a7b3f"/><stop offset=".5" stop-color="#f3e3b5"/><stop offset="1" stop-color="#d8b878"/></linearGradient></defs><circle cx="50" cy="50" r="30" fill="none" stroke="url(#g)" stroke-width="7"/><ellipse cx="50" cy="50" rx="46" ry="14" fill="none" stroke="url(#g)" stroke-width="2.5" transform="rotate(-28 50 50)"/><circle cx="84" cy="33" r="4.5" fill="#f3e3b5"/></svg>
+<a class="name gt" href="https://www.orbioltd.co.uk/" target="_blank" rel="noopener">ORBIO</a>
+
+
+
+
+</div>
+<div class="face back"><svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9a7b3f"/><stop offset=".5" stop-color="#f3e3b5"/><stop offset="1" stop-color="#d8b878"/></linearGradient></defs><circle cx="50" cy="50" r="30" fill="none" stroke="url(#g2)" stroke-width="7"/><ellipse cx="50" cy="50" rx="46" ry="14" fill="none" stroke="url(#g2)" stroke-width="2.5" transform="rotate(-28 50 50)"/><circle cx="84" cy="33" r="4.5" fill="#f3e3b5"/></svg>
+</div>
+</div></div></div>
+<div class="tap" id="tap">Tap the Card</div>
+
+
+</div></div>
+<div class="ov" id="ov"><div class="pn" id="pn" role="dialog" aria-modal="true"><button class="x" id="close" aria-label="Close">✕</button><div id="pc"></div></div></div>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},card=$('#card'),scene=$('#scene');
+var BASE=-6,rx=-6,ry=0,drag=false,sx,sy,moved=0,sound=true,AC=null;
+function ctx(){if(!sound)return null;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}catch(e){return null}}
+function tone(f,t0,dur,vol,type,f2){var c=ctx();if(!c)return;var t=c.currentTime+t0,o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+dur);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol||.05,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.05)}
+function bell(f,t0){tone(f,t0,1.1,.045);tone(f*2,t0,.7,.015);tone(f*3.01,t0,.4,.006)}
+var NB=null,lastS=0;
+function noise(t0,dur,f1,f2,vol,q){var c=ctx();if(!c)return;if(!NB){NB=c.createBuffer(1,c.sampleRate,c.sampleRate);var d=NB.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1}var t=c.currentTime+t0,s=c.createBufferSource(),b=c.createBiquadFilter(),g=c.createGain();s.buffer=NB;s.loop=true;b.type='bandpass';b.Q.value=q||1.2;b.frequency.setValueAtTime(f1,t);b.frequency.exponentialRampToValueAtTime(f2,t+dur);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+dur*.35);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(b);b.connect(g);g.connect(c.destination);s.start(t);s.stop(t+dur+.05)}
+function sfTick(){tone(1400,0,.05,.03,'triangle',900)}
+function sfFlip(){noise(0,.5,350,2600,.22);tone(150,.42,.14,.08,'sine',70)}
+function sfReset(){noise(0,.45,2400,300,.18);tone(150,.38,.12,.06,'sine',70)}
+function sfSettle(){tone(140,0,.12,.06,'sine',70)}
+function swish(v){var n=Date.now();if(n-lastS<110||v<4)return;lastS=n;noise(0,.16,500+v*30,1500+v*40,Math.min(.14,.03+v*.004),1)}
+function sfOpen(){tone(520,0,.12,.04);tone(780,.08,.18,.04)}
+function sfClose(){tone(780,0,.1,.035);tone(520,.07,.16,.035)}
+function sfWA(){tone(700,0,.09,.06,'sine',1100);tone(900,.11,.12,.06,'sine',1400)}
+function sfRing(){[0,.25].forEach(function(t){tone(440,t,.18,.04);tone(480,t,.18,.04)})}
+function sfMail(){noise(0,.3,600,3000,.12);bell(988,.22)}
+function sfPing(){bell(740,0)}
+function sfWeb(){bell(523,0);bell(659,.12);bell(784,.24)}
+function chime(f,d){var c=ctx();if(!c)return;try{var t=c.currentTime+(d||0),m=c.createGain();m.gain.setValueAtTime(.0001,t);m.gain.exponentialRampToValueAtTime(.06,t+.02);m.gain.exponentialRampToValueAtTime(.0001,t+1.3);m.connect(c.destination);[[1,1],[2,.35],[3.01,.12]].forEach(function(p){var o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=(f||660)*p[0];g.gain.value=p[1];o.connect(g);g.connect(m);o.start(t);o.stop(t+1.4)})}catch(e){}}
+function beep(f){var m={700:sfFlip,520:sfReset,480:sfSettle};if(m[f]){m[f]();return}chime(f)}
+function apply(){card.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)';var m=((ry%360)+360)%360;card.style.setProperty('--g',(50+Math.sin(ry*Math.PI/180)*60)+'%');card.querySelectorAll('.face').forEach(function(f){f.style.setProperty('--g',(50+Math.sin((ry+(f.classList.contains('back')?180:0))*Math.PI/180)*70-rx*2)+'%')})}
+function snap(){ry=Math.round(ry/180)*180;rx=BASE;apply()}
+scene.addEventListener('pointerdown',function(e){drag=true;moved=0;sx=e.clientX;sy=e.clientY;card.classList.add('drag')});
+window.addEventListener('pointermove',function(e){if(!drag)return;var dx=e.clientX-sx,dy=e.clientY-sy;sx=e.clientX;sy=e.clientY;moved+=Math.abs(dx)+Math.abs(dy);swish(Math.abs(dx)+Math.abs(dy));ry+=dx*.55;rx=Math.max(BASE-28,Math.min(BASE+28,rx-dy*.35));apply()});
+window.addEventListener('pointerup',function(){if(!drag)return;drag=false;card.classList.remove('drag');snap();if(moved>6)beep(480)});
+scene.addEventListener('click',function(e){if(moved>6){e.preventDefault();e.stopPropagation();moved=0}},true);
+apply();
+var P={};
+P.about=['About','ORBIO LTD','<p>ORBIO LTD is a UK-registered B2B IT and Business Services provider, delivering tailored solutions to businesses across various sectors.</p><div class="grid"><div class="tile" style="--i:0"><b>UK Registered</b><span>A UK-registered company.</span></div><div class="tile" style="--i:1"><b>ICO Registered</b><span>Registered with the ICO.</span></div><div class="tile" style="--i:2"><b>GDPR Compliant</b><span>GDPR-compliant data services.</span></div><div class="tile" style="--i:3"><b>B2B Business Support</b><span>Support provided to businesses.</span></div></div><p>We work closely with our clients to provide reliable services that meet their business needs. With a focus on quality, integrity and customer satisfaction, we build trusted relationships and deliver value through professional service and long-term partnerships.</p>'];
+P.services=['Explore','Our Services','<p>ORBIO LTD provides B2B IT and Business Services, tailored to the needs of each client.</p><div class="grid"><div class="tile" style="--i:0"><b>B2B IT Services</b><span>IT services for businesses.</span></div><div class="tile" style="--i:1"><b>B2B Business Support</b><span>Professional support for your operations.</span></div><div class="tile" style="--i:2"><b>Tailored Solutions</b><span>Built around your business needs.</span></div><div class="tile" style="--i:3"><b>Data Services</b><span>GDPR-compliant data services.</span></div></div><p class="note">Contact us to discuss the exact services your business needs.</p>'];
+P.why=['Why','Why Choose ORBIO LTD','<div class="grid"><div class="tile" style="--i:0"><b>Save Time</b><span>Hand off routine work and reclaim your day.</span></div><div class="tile" style="--i:1"><b>Productivity</b><span>Stay focused on what grows your business.</span></div><div class="tile" style="--i:2"><b>Operational Support</b><span>Dependable help with day-to-day operations.</span></div><div class="tile" style="--i:3"><b>Reliable Support</b><span>A professional, business-focused service.</span></div></div><p>Quality, integrity and customer satisfaction guide everything we do.</p>'];
+P.how=['Process','How It Works','<div class="steps"><div class="st" style="--i:1"><em>1</em><b>Discuss your business requirements</b><p>Tell us about your business and what you need.</p></div><div class="st" style="--i:2"><em>2</em><b>Agree the right solution</b><p>We tailor our support to your needs.</p></div><div class="st" style="--i:3"><em>3</em><b>Start working together</b><p>Manage your business tasks more efficiently.</p></div></div>'];
+P.contact=['Contact','Let’s Work Together','<p>Reach the ORBIO LTD team directly:</p><div class="cl"><a class="btn wab" href="https://wa.me/447843862112" target="_blank" rel="noopener"><small>WhatsApp</small>+44 7843 862112</a><a class="btn" href="tel:+442080580504"><small>Telephone</small>020 8058 0504</a><a class="btn" href="mailto:info@orbioltd.co.uk?subject=Enquiry%20-%20ORBIO%20LTD"><small>Official Email</small>info@orbioltd.co.uk</a><a class="btn" href="mailto:support@orbioltd.co.uk?subject=Support%20Request%20-%20ORBIO%20LTD"><small>Support Email</small>support@orbioltd.co.uk</a><div class="btn" style="pointer-events:none"><small>Address</small>2 Frederick Street, Kings Cross, London, WC1X 0ND</div><a class="btn prime" href="https://www.orbioltd.co.uk/" target="_blank" rel="noopener"><small style="color:#3a2d10">Official Website</small>www.orbioltd.co.uk</a></div>'];
+function openHud(){document.body.classList.remove('intro');document.body.classList.add('open');BASE=62;rx=62;card.classList.remove('drag');apply();sfFlip();chime(660,.3)}
+scene.addEventListener('click',function(){if(document.body.classList.contains('intro')&&moved<=6)openHud()});$('#tap').onclick=openHud;
+var ro=function(){document.documentElement.style.setProperty('--u',scene.offsetWidth/100+'px')};ro();if(window.ResizeObserver)new ResizeObserver(ro).observe(scene);addEventListener('resize',ro);
+var ov=$('#ov');
+function open(k){var d=P[k];$('#pc').innerHTML='<div class="k">'+d[0]+'</div><h2 class="gt">'+d[1]+'</h2>'+d[2];ov.classList.add('on');$('#pn').scrollTop=0;beep(660)}
+function close(){ov.classList.remove('on');beep(420)}
+document.querySelectorAll('.nav button').forEach(function(b){b.onclick=function(){open(b.dataset.p)}});
+$('#close').onclick=close;ov.addEventListener('click',function(e){if(e.target===ov)close()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+function veins(n,o){var d='M-20 330C120 250 220 380 360 300S600 230 720 290|M-20 260C140 180 240 310 380 230S600 160 720 220|M-20 360C100 300 260 400 400 340S620 290 720 340|M-20 150C120 90 260 190 400 120S600 70 720 130|M-20 90C150 40 280 120 420 60S620 20 720 60'.split('|');var s='<svg class="veins" viewBox="0 0 700 400" preserveAspectRatio="none" style="opacity:'+o+'"><defs><linearGradient id="vg'+n+'"><stop offset="0" stop-color="#9a7b3f"/><stop offset=".5" stop-color="#ffd98a"/><stop offset="1" stop-color="#ff9a3c"/></linearGradient></defs>';d.forEach(function(p,i){s+='<path class="b" d="'+p+'" stroke="url(#vg'+n+')"/><path class="e" pathLength="400" style="--d:'+i*1.6+'" d="'+p+'" stroke="url(#vg'+n+')"/>'});return s+'</svg>'}
+$('.back').insertAdjacentHTML('afterbegin',veins(1,1));
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a');if(!a||moved>6)return;var h=a.href||'';if(h.indexOf('wa.me')>-1)chime(784);else if(h.indexOf('tel:')==0)chime(698);else if(h.indexOf('mailto:')==0)chime(h.indexOf('support@')>-1?494:588);else if(h.indexOf('google.com/maps')>-1)chime(740);else if(h.indexOf('www.orbioltd')>-1)chime(880);else chime(660)},true);
+var c=$('#fx'),x=c.getContext('2d'),W,H,ps=[];
+function rs(){W=c.width=innerWidth;H=c.height=innerHeight}rs();addEventListener('resize',rs);
+for(var i=0;i<42;i++)ps.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.4,s:Math.random()*.0003+.0001,a:Math.random()});
+(function f(){x.clearRect(0,0,W,H);ps.forEach(function(p){p.y-=p.s;p.a+=.02;if(p.y<0)p.y=1;x.globalAlpha=.25+.25*Math.sin(p.a);x.fillStyle='#e8cf92';x.beginPath();x.arc(p.x*W,p.y*H,p.r,0,6.3);x.fill()});requestAnimationFrame(f)})();
+})();
+</script><script>
+/* when shown inside the Orbio Desk pop-up, ask the parent page to open links (WhatsApp, website) in a new tab */
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var u=a.href;if(/^https:\/\//.test(u)&&window.parent!==window){e.preventDefault();window.parent.postMessage({orbioOpen:u},'*')}},true);
+</script>
+</body></html>
