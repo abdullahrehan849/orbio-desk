@@ -9,11 +9,12 @@ Static, mobile-first website for Orbio Desk (24/7 dispatch and call handling for
 
 ```
 index.html                Home page (SEO title, description and Schema.org JSON-LD included)
-operator-samples.html  Sample call recordings page (not indexed by search engines)
+operator-samples.html  Operator call recordings page (not indexed by search engines)
 privacy.html cookies.html terms.html dpa.html complaints.html   Legal pages
 404.html                  Page not found
 assets/css/style.css      All styling
 assets/js/main.js         Menu, daily shift report, sticky CTA, exit-intent popup, Web3Forms form
+assets/card/index.html  Interactive digital business card (opens in a pop-up from the home page)
 assets/img/               Monitoring photo (lazy loaded) and favicon
 assets/audio/   Three call samples (booking-sample-01 to 03, .mp3)
 sitemap.xml, site.webmanifest, robots.txt, .well-known/security.txt, .nojekyll, LICENSE, .gitignore
